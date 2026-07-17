@@ -1,10 +1,50 @@
 # odd-collector
 
-![Version: 0.1.4](https://img.shields.io/badge/Version-0.1.4-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: latest](https://img.shields.io/badge/AppVersion-latest-informational?style=flat-square)
+![Version: 0.1.11](https://img.shields.io/badge/Version-0.1.11-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: latest](https://img.shields.io/badge/AppVersion-latest-informational?style=flat-square)
 
-A Helm chart for any odd-collector compatible deployments
+A Helm chart for odd-collector deployments on Kubernetes.
+
+## Features
+
+- Configurable ServiceAccount with IRSA support
+- Flexible configuration via values
+- Container security context configuration
+- Horizontal Pod Autoscaling support
+
+## Installation
+
+```bash
+helm install odd-collector ./charts/odd-collector
+```
+
+## ServiceAccount and IRSA
+
+The chart creates a ServiceAccount by default. To enable EKS IRSA:
+
+```bash
+helm install odd-collector ./charts/odd-collector \
+  --set serviceAccount.annotations."eks\.amazonaws\.com/role-arn"=arn:aws:iam::ACCOUNT_ID:role/ROLE_NAME
+```
+
+To disable ServiceAccount creation and use an existing one:
+
+```bash
+helm install odd-collector ./charts/odd-collector \
+  --set serviceAccount.create=false \
+  --set serviceAccount.name=existing-service-account
+```
 
 ## Values
+
+See `values.yaml` for all configurable options. Key sections:
+
+- `serviceAccount`: Control ServiceAccount creation and IRSA annotations
+- `image`: Container image repository and tag
+- `env`: Environment variables
+- `resources`: CPU and memory limits/requests
+- `autoscaling`: HPA configuration
+
+### Configuration Details
 
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
@@ -29,6 +69,9 @@ A Helm chart for any odd-collector compatible deployments
 | replicaCount | int | `1` |  |
 | resources | object | `{}` |  |
 | securityContext | object | `{}` |  |
+| serviceAccount.annotations | object | `{}` | Annotations to add to the service account |
+| serviceAccount.create | bool | `true` | Specifies whether a service account should be created |
+| serviceAccount.name | string | `""` | The name of the service account to use |
 | tolerations | list | `[]` |  |
 
 ----------------------------------------------

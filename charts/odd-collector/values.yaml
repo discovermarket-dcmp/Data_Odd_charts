@@ -61,6 +61,9 @@ tolerations: []
 
 affinity: {}
 
+# configMap: 
+#   test: abc
+
 collectorConfig: |
   default_pulling_interval: 10
   token: ""
@@ -73,10 +76,22 @@ collectorConfig: |
       database: "some_database_name"
       user: "some_user_name"
       password: !ENV ${POSTGRES_PASSWORD}
-#    - type: mysql
-#      name: test_mysql_collector
-#      host: "localhost"
-#      port: 3306
-#      database: "some_database_name"
-#      user: "some_user_name"
-#      password: "some_password"
+    - type: mysql
+      name: test_mysql_collector
+      host: "localhost"
+      port: 3306
+      database: "some_database_name"
+      user: "some_user_name"
+      password: "some_password"
+
+# serviceAccount:
+#   # Specifies whether a service account should be created
+#   create: true
+#   # Annotations to add to the service account
+#   # Example for EKS IRSA:
+#   # annotations:
+#   #   eks.amazonaws.com/role-arn: arn:aws:iam::ACCOUNT_ID:role/IAM_ROLE_NAME
+#   annotations: {}
+#   # The name of the service account to use.
+#   # If not set and create is true, a name is generated using the fullname template
+#   name: ""

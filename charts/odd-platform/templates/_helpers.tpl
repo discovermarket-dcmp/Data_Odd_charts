@@ -55,9 +55,11 @@ app.kubernetes.io/instance: {{ .Release.Name }}
 Create the name of the service account to use
 */}}
 {{- define "odd-platform.serviceAccountName" -}}
-{{- if .Values.serviceAccount.create }}
+{{- if and (hasKey .Values "serviceAccount") .Values.serviceAccount.create }}
 {{- default (include "odd-platform.fullname" .) .Values.serviceAccount.name }}
-{{- else }}
+{{- else if hasKey .Values "serviceAccount" }}
 {{- default "default" .Values.serviceAccount.name }}
+{{- else }}
+{{- "default" }}
 {{- end }}
 {{- end }}

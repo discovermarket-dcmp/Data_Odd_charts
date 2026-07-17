@@ -8,6 +8,8 @@ spec:
 {{- if not .Values.autoscaling.enabled }}
   replicas: {{ .Values.replicaCount }}
 {{- end }}
+  strategy:
+    type: Recreate
   selector:
     matchLabels:
       {{- include "odd-collector.selectorLabels" . | nindent 6 }}
@@ -20,6 +22,7 @@ spec:
       labels:
         {{- include "odd-collector.selectorLabels" . | nindent 8 }}
     spec:
+      serviceAccountName: {{ include "odd-collector.serviceAccountName" . }}
       {{- with .Values.imagePullSecrets }}
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}

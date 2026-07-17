@@ -50,3 +50,16 @@ Selector labels
 app.kubernetes.io/name: {{ include "odd-collector.name" . }}
 app.kubernetes.io/instance: {{ .Release.Name }}
 {{- end }}
+
+{{/*
+Return the appropriate serviceAccountName
+*/}}
+{{- define "odd-collector.serviceAccountName" -}}
+{{- if and .Values.serviceAccount .Values.serviceAccount.create }}
+{{- default (include "odd-collector.fullname" .) .Values.serviceAccount.name }}
+{{- else if .Values.serviceAccount }}
+{{- default "default" .Values.serviceAccount.name }}
+{{- else }}
+{{- "default" }}
+{{- end }}
+{{- end }}
