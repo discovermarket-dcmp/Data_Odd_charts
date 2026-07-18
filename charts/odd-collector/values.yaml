@@ -95,3 +95,23 @@ collectorConfig: |
 #   # The name of the service account to use.
 #   # If not set and create is true, a name is generated using the fullname template
 #   name: ""
+
+# odd-collector's image runs `python -m odd_collector` once and exits (not a
+# long-running server), so a CronJob is the correct workload type. When
+# enabled, it replaces the Deployment/HPA entirely.
+cronJob:
+  # Run odd-collector as a Kubernetes CronJob instead of a Deployment.
+  enabled: true
+  # Standard cron schedule expression (default: every hour, on the hour)
+  schedule: "0 * * * *"
+  # schedule: "30 * * * *"
+  # Forbid: skip the new run if the previous one is still active.
+  concurrencyPolicy: Forbid
+  successfulJobsHistoryLimit: 3
+  failedJobsHistoryLimit: 1
+  # How many seconds a schedule is allowed to be missed before it's
+  # considered failed (e.g. if the cluster was down)
+  startingDeadlineSeconds: 120
+  # Number of retries before marking a Job run as failed
+  backoffLimit: 0
+  restartPolicy: Never
